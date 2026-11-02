@@ -87,6 +87,8 @@ function openVideo(item) {
   $("#dialogChannel").textContent = item.channel;
   $("#youtubeLink").href = `https://www.youtube.com/watch?v=${encodeURIComponent(item.id)}`;
   $("#downloadUrl").value = "";
+  $("#permissionCheck").checked = false;
+  updatePermissionStatus();
   dialog.showModal();
 }
 function getHistory() {
@@ -128,9 +130,20 @@ async function checkConfig() {
 searchForm.addEventListener("submit", event => { event.preventDefault(); search(searchInput.value); });
 $("#closeDialog").addEventListener("click", () => dialog.close());
 dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+function updatePermissionStatus() {
+  const confirmed = $("#permissionCheck").checked;
+  const hasUrl = Boolean($("#downloadUrl").value.trim());
+  const status = $("#permissionStatus");
+  status.textContent = confirmed ? "✓ Можно скачать — разрешение подтверждено тобой" : "⚠️ Разрешение не проверено";
+  status.classList.toggle("allowed", confirmed);
+  $("#downloadButton").disabled = !(confirmed && hasUrl);
+}
+$("#permissionCheck").addEventListener("change", updatePermissionStatus);
+$("#downloadUrl").addEventListener("input", updatePermissionStatus);
 $("#downloadButton").addEventListener("click", () => {
   const raw = $("#downloadUrl").value.trim();
   if (!selectedVideo) return;
+  if (!$("#permissionCheck").checked) { showToast("Сначала подтверди разрешение на скачивание."); return; }
   let parsed;
   try { parsed = new URL(raw); } catch { showToast("Вставь корректную прямую ссылку на файл."); return; }
   if (!["http:", "https:"].includes(parsed.protocol)) { showToast("Поддерживаются только HTTP и HTTPS ссылки."); return; }

@@ -68,10 +68,12 @@
         <a class="youtube-link" id="youtubeLink" target="_blank" rel="noopener noreferrer">Открыть на YouTube <span>↗</span></a>
         <div class="download-box">
           <div class="download-box-heading"><span class="download-symbol">↓</span><div><b>Скачать разрешённый файл</b><small>Вставь прямую ссылку от автора или правообладателя</small></div></div>
-          <label for="downloadUrl">Прямая ссылка на файл</label>
+          <div class="permission-status" id="permissionStatus" role="status">⚠️ Разрешение не проверено</div>
+          <label for="downloadUrl">Прямая ссылка на файл от автора</label>
           <input id="downloadUrl" type="url" placeholder="https://example.com/video.mp4">
-          <button class="primary-button" id="downloadButton" type="button">Скачать файл <span>↓</span></button>
-          <p class="tiny-note">YouTube Data API не предоставляет видеофайлы. Скачивание роликов YouTube в обход ограничений не поддерживается.</p>
+          <label class="permission-check"><input id="permissionCheck" type="checkbox"> <span>Подтверждаю, что автор разрешил скачивание или файл принадлежит мне.</span></label>
+          <button class="primary-button" id="downloadButton" type="button" disabled>Скачать файл <span>↓</span></button>
+          <p class="tiny-note">YouTube Data API не предоставляет видеофайлы и не проверяет разрешения автоматически. На iPhone после загрузки открой файл в «Файлы» → «Поделиться» → «Сохранить видео», чтобы добавить его в «Фото».</p>
         </div>
       </div>
     </div>
