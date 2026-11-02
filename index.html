@@ -33,6 +33,28 @@
       <div class="search-hint"><span>↵</span> Нажми Enter для поиска <span class="dot">·</span> Поиск через YouTube Data API</div>
     </section>
 
+    <section class="paste-section" id="paste-download">
+      <div class="paste-card">
+        <div class="eyebrow small">DIRECT DOWNLOAD</div>
+        <h2>Уже есть ссылка на видео?</h2>
+        <p>Вставь обычную ссылку YouTube — сайт распознает ролик и откроет его. Для сохранения MP4 нужна отдельная ссылка на файл от автора или правообладателя.</p>
+        <form id="youtubeUrlForm" class="direct-download-form youtube-url-form">
+          <input id="youtubeVideoUrl" type="url" inputmode="url" placeholder="https://youtu.be/... или youtube.com/watch?v=..." aria-label="Ссылка на видео YouTube" required>
+          <button type="submit" class="primary-button">Проверить ссылку <span>↗</span></button>
+        </form>
+        <div id="youtubeUrlStatus" class="permission-status" role="status">Вставь ссылку на YouTube.</div>
+        <a id="youtubeUrlOpen" class="youtube-link hidden" target="_blank" rel="noopener noreferrer">Открыть видео на YouTube ↗</a>
+        <div class="paste-separator"></div>
+        <form id="directDownloadForm" class="direct-download-form">
+          <input id="directVideoUrl" type="url" inputmode="url" placeholder="https://example.com/video.mp4" aria-label="Прямая ссылка на видеофайл" required>
+          <button type="submit" class="primary-button">Проверить и скачать <span>↓</span></button>
+        </form>
+        <label class="permission-check direct-permission"><input id="directPermissionCheck" type="checkbox"> <span>Подтверждаю, что файл мой или у меня есть разрешение на его скачивание.</span></label>
+        <div id="directDownloadStatus" class="permission-status" role="status">⚠️ Сначала подтверди разрешение и вставь прямую ссылку на файл.</div>
+        <p class="tiny-note">На iPhone Safari может открыть видео в отдельной вкладке. Нажми «Поделиться» → «Сохранить видео», чтобы добавить его в «Фото» (если источник отдаёт файл в совместимом формате).</p>
+      </div>
+    </section>
+
     <section class="results-section" aria-live="polite">
       <div class="section-heading"><div><div class="eyebrow small">DISCOVER</div><h2 id="resultsTitle">Популярный поиск начинается здесь</h2></div><span class="result-count" id="resultCount"></span></div>
       <div class="state-panel" id="emptyState">

@@ -168,3 +168,52 @@ $("#clearHistory").addEventListener("click", () => {
 });
 renderHistory();
 checkConfig();
+const directDownloadForm = $("#directDownloadForm");
+if (directDownloadForm) {
+  const directUrlInput = $("#directVideoUrl");
+  const directPermission = $("#directPermissionCheck");
+  const directStatus = $("#directDownloadStatus");
+  directDownloadForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const raw = directUrlInput.value.trim();
+    if (!directPermission.checked) { directStatus.textContent = "⚠️ Подтверди, что у тебя есть право скачивать этот файл."; directStatus.classList.remove("allowed"); return; }
+    let parsed;
+    try { parsed = new URL(raw); } catch { directStatus.textContent = "⚠️ Вставь корректную прямую ссылку на видеофайл."; directStatus.classList.remove("allowed"); return; }
+    if (!["http:","https:"].includes(parsed.protocol) || !/\.(mp4|mov|m4v|webm)(?:$|[?#])/i.test(parsed.pathname + parsed.search)) { directStatus.textContent = "⚠️ Нужна прямая ссылка на видеофайл (например, .mp4), а не обычная ссылка YouTube."; directStatus.classList.remove("allowed"); return; }
+    directStatus.textContent = "✓ Разрешение подтверждено. Открываем файл для сохранения на устройство."; directStatus.classList.add("allowed");
+    const link = document.createElement("a"); link.href = parsed.href; link.target = "_blank"; link.rel = "noopener noreferrer"; link.download = ""; document.body.appendChild(link); link.click(); link.remove();
+    showToast("Открыл ссылку на видеофайл. На iPhone используй «Поделиться» → «Сохранить видео».");
+  });
+}
+
+const youtubeUrlForm = $("#youtubeUrlForm");
+if (youtubeUrlForm) {
+  const youtubeInput = $("#youtubeVideoUrl");
+  const youtubeStatus = $("#youtubeUrlStatus");
+  const youtubeOpen = $("#youtubeUrlOpen");
+  youtubeUrlForm.addEventListener("submit", event => {
+    event.preventDefault();
+    let parsed;
+    try { parsed = new URL(youtubeInput.value.trim()); } catch {
+      youtubeStatus.textContent = "⚠️ Вставь корректную ссылку YouTube.";
+      youtubeOpen.classList.add("hidden");
+      return;
+    }
+    const host = parsed.hostname.replace(/^www\./, "").replace(/^m\./, "");
+    let videoId = "";
+    if (host === "youtu.be") videoId = parsed.pathname.split("/").filter(Boolean)[0] || "";
+    else if (["youtube.com", "music.youtube.com"].includes(host)) {
+      if (parsed.pathname === "/watch") videoId = parsed.searchParams.get("v") || "";
+      else if (/^\/(shorts|embed|live)\//.test(parsed.pathname)) videoId = parsed.pathname.split("/")[2] || "";
+    }
+    if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+      youtubeStatus.textContent = "⚠️ Не удалось распознать ссылку. Подойдут youtube.com/watch?v=…, youtu.be/… и YouTube Shorts.";
+      youtubeOpen.classList.add("hidden");
+      return;
+    }
+    const canonicalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    youtubeOpen.href = canonicalUrl;
+    youtubeOpen.classList.remove("hidden");
+    youtubeStatus.textContent = "✓ Ссылка распознана. Открыть видео можно на YouTube. Обычная ссылка не является MP4-файлом и сама по себе не даёт возможности скачать ролик в Фото.";
+  });
+}
