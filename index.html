@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Поиск YouTube и загрузка контента, который разрешено скачивать правообладателем.">
+  <title>YT Vault — поиск и сохранение видео</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="YT Vault — главная">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 2 12a30 30 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A30 30 0 0 0 22 12a30 30 0 0 0-.4-4.8ZM10 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg></span>
+      <span>YT <b>VAULT</b></span>
+    </a>
+    <nav><a href="#search">Поиск</a><a href="#downloads">Загрузки</a><a href="#about">Как это работает</a></nav>
+    <span class="status"><i></i> <span id="apiStatus">Проверка API</span></span>
+  </header>
+
+  <main>
+    <section class="hero" id="search">
+      <div class="eyebrow"><span class="eyebrow-line"></span> YOUR VIDEO SPACE</div>
+      <h1>Найди видео.<br><span>Сохрани своё.</span></h1>
+      <p class="hero-copy">Ищи ролики на YouTube и сохраняй контент, который автор разрешил скачивать.</p>
+
+      <form class="searchbar" id="searchForm">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
+        <input id="searchInput" type="search" placeholder="Что хочешь найти?" autocomplete="off" aria-label="Поиск видео">
+        <button type="submit" id="searchButton"><span>Найти</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </form>
+      <div class="search-hint"><span>↵</span> Нажми Enter для поиска <span class="dot">·</span> Поиск через YouTube Data API</div>
+    </section>
+
+    <section class="results-section" aria-live="polite">
+      <div class="section-heading"><div><div class="eyebrow small">DISCOVER</div><h2 id="resultsTitle">Популярный поиск начинается здесь</h2></div><span class="result-count" id="resultCount"></span></div>
+      <div class="state-panel" id="emptyState">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h5"></path></svg></div>
+        <h3>Твой следующий просмотр — здесь</h3>
+        <p>Введи название, тему или автора в строку поиска выше.</p>
+      </div>
+      <div class="loader hidden" id="loader"><span></span><span></span><span></span><p>Ищем на YouTube…</p></div>
+      <div class="error-panel hidden" id="errorPanel"></div>
+      <div class="video-grid" id="videoGrid"></div>
+    </section>
+
+    <section class="downloads-section" id="downloads">
+      <div class="section-heading"><div><div class="eyebrow small">YOUR LIBRARY</div><h2>Недавние загрузки</h2></div><button class="text-button" id="clearHistory" type="button">Очистить историю</button></div>
+      <div class="history-list" id="historyList"><div class="history-empty">Здесь появятся видео, которые ты сохранишь.</div></div>
+    </section>
+
+    <section class="info-section" id="about">
+      <div class="info-card"><span class="info-number">01</span><div><h3>Найди видео</h3><p>Поиск по названию, теме или каналу с данными YouTube.</p></div></div>
+      <div class="info-card"><span class="info-number">02</span><div><h3>Открой ролик</h3><p>Посмотри превью и перейди к оригиналу на YouTube.</p></div></div>
+      <div class="info-card"><span class="info-number">03</span><div><h3>Сохрани разрешённый файл</h3><p>Вставь прямую ссылку на файл, предоставленную автором или правообладателем.</p></div></div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 2 12a30 30 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A30 30 0 0 0 22 12a30 30 0 0 0-.4-4.8ZM10 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg></span><span>YT <b>VAULT</b></span></a><p>Не связан с YouTube. Используй загрузку только для контента, на который у тебя есть права.</p><span>© 2026 YT Vault</span></footer>
+
+  <dialog id="videoDialog" class="video-dialog">
+    <button class="dialog-close" id="closeDialog" aria-label="Закрыть">×</button>
+    <div class="dialog-content">
+      <div class="dialog-preview" id="dialogPreview"></div>
+      <div class="dialog-details">
+        <div class="eyebrow small">VIDEO DETAILS</div><h2 id="dialogTitle"></h2><p id="dialogChannel" class="muted"></p>
+        <a class="youtube-link" id="youtubeLink" target="_blank" rel="noopener noreferrer">Открыть на YouTube <span>↗</span></a>
+        <div class="download-box">
+          <div class="download-box-heading"><span class="download-symbol">↓</span><div><b>Скачать разрешённый файл</b><small>Вставь прямую ссылку от автора или правообладателя</small></div></div>
+          <label for="downloadUrl">Прямая ссылка на файл</label>
+          <input id="downloadUrl" type="url" placeholder="https://example.com/video.mp4">
+          <button class="primary-button" id="downloadButton" type="button">Скачать файл <span>↓</span></button>
+          <p class="tiny-note">YouTube Data API не предоставляет видеофайлы. Скачивание роликов YouTube в обход ограничений не поддерживается.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
